@@ -10,7 +10,6 @@ class DataLoader:
     def __int__(self, data):
         self.data = data
         self.data_header = None
-        self.restaurant_info = {}
 
     def _load_data_source1(self, data_source_csv):
         restaurant_info = {}
@@ -33,12 +32,12 @@ class DataLoader:
                     elif self.data_header[4] == d_key:
                         close_time = datetime.strptime(d_value.strip(), '%H:%M:%S').time()
                     elif self.data_header[5] == d_key:
-                        # TODO change the key for the the days
                         days = d_value.strip().split(',')
                         time_dict = {self.data_header[3]: {}, self.data_header[4]: {}}
                         for day in days:
-                            time_dict[self.data_header[3]][day] = open_time
-                            time_dict[self.data_header[4]][day] = close_time
+                            day_int = enum_days.Days[day].value
+                            time_dict[self.data_header[3]][day_int] = open_time
+                            time_dict[self.data_header[4]][day_int] = close_time
                         restaurant_info[restaurant_name].update(time_dict)
                     elif self.data_header[6] == d_key:
                         restaurant_info[restaurant_name][self.data_header[6]] = int(d_value)
@@ -57,10 +56,10 @@ class DataLoader:
                 for t in time.split('/'):
                     opens, closes = self._parse_time(t)
                     days = self._parse_days(t)
-                    r_d = {'Opens': {}, 'Closes': {}}
+                    r_d = {'opens': {}, 'closes': {}}
                     for d in days:
-                        r_d['Opens'][d] = opens
-                        r_d['Closes'][d] = closes
+                        r_d['opens'][d] = opens
+                        r_d['closes'][d] = closes
                     restaurant_info[restaurant_name].update(r_d)
         return restaurant_info
 
@@ -99,4 +98,7 @@ class DataLoader:
         return [i for i in range(start_day, end_day + 1)]
 
     def import_data(self, sources: list):
-        return self._load_data_source2(sources[1])
+        _restaurant_info = {}
+        _restaurant_info.update(self._load_data_source1(sources[0]))
+        _restaurant_info.update(self._load_data_source2(sources[1]))
+        return _restaurant_info

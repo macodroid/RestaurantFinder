@@ -1,4 +1,5 @@
 import csv
+import re
 from datetime import datetime
 
 
@@ -6,6 +7,7 @@ class DataLoader:
     def __int__(self, data):
         self.data = data
         self.data_header = None
+        self.restaurant_info = {}
 
     def _load_data_source1(self, data_source_csv: str) -> dict[dict]:
         restaurant_info = {}
@@ -29,9 +31,9 @@ class DataLoader:
                         close_time = datetime.strptime(d_value.strip(), '%H:%M:%S').time()
                     elif self.data_header[5] == d_key:
                         # TODO !!!SMELL!!! change variable name
-                        p = d_value.strip().split(',')
+                        days = d_value.strip().split(',')
                         time_dict = {self.data_header[3]: {}, self.data_header[4]: {}}
-                        for day in p:
+                        for day in days:
                             time_dict[self.data_header[3]][day] = open_time
                             time_dict[self.data_header[4]][day] = close_time
                         restaurant_info[restaurant_name].update(time_dict)
@@ -42,10 +44,30 @@ class DataLoader:
                     # TODO add location and description
         return restaurant_info
 
-    def _load_data_source1(self, data_source_csv: str) -> dict[dict]:
+    def _load_data_source2(self, data_source_csv: str) -> dict[dict]:
         restaurant_info = {}
         with open(data_source_csv, mode='r') as file:
-            csv_reader = csv.DictReader(file, delimiter=',')
+            csv_reader = csv.reader(file, delimiter=',')
+            for restaurant_name, time in csv_reader:
+                # TODO don't forget on time column that has /
+                opens, closes = self._parse_time(time)
+                pass
+
+    # TODO what if restaurant opens at 11 am but close at 2 am next day
+    def _parse_time(self, str_time):
+        working_hours = []
+        hours = re.search("\\d*:*\\d+ [ap]m - \\d*:*\\d+ [ap]m", str_time)
+        parsed_time = hours.group().split('-')
+        for t in parsed_time:
+            if ':' in t:
+                time_format = '%I:%M %p'
+            else:
+                time_format = '%I %p'
+            working_hours.append(datetime.strptime(t.strip(), time_format).time())
+        return working_hours[0], working_hours[1]
+
+    def _parse_days(self, str_days):
+        pass
 
     def import_data(self, sources: list[str]):
-        return self._load_data_source1(sources[0])
+        return self._load_data_source2(sources[1])

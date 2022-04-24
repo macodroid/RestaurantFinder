@@ -1,6 +1,5 @@
 import csv
 import re
-from enum import Enum
 
 import enum_days
 from datetime import datetime

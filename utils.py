@@ -2,6 +2,8 @@ import enum_days
 
 
 def print_restaurants_name(restaurants):
+    if len(restaurants) == 0:
+        print("Please, insert correct cuisine.")
     for i, restaurant in enumerate(restaurants):
         if i % 5 == 0 and i != 0:
             print(restaurant)

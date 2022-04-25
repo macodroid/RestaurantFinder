@@ -2,6 +2,7 @@ from enum import Enum
 
 
 class Days(Enum):
+    # abbreviation of days in week
     Mon = 0
     Tue = 1
     Wed = 2
@@ -10,7 +11,7 @@ class Days(Enum):
     Sat = 5
     Sun = 6
 
-    # Second format of days
+    # The second form of abbreviation days in the week.
     Mo = 0
     Tu = 1
     We = 2

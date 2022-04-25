@@ -42,31 +42,8 @@ class DataLoader:
                         restaurant_info[restaurant_name][self.data_header[6]] = int(d_value)
                     elif self.data_header[7] == d_key:
                         restaurant_info[restaurant_name][self.data_header[7]] = int(d_value)
-                    # TODO add location and description
         return restaurant_info
 
-    def _load_data_source2(self, data_source_csv: str) -> dict:
-        restaurant_info = {}
-        with open(data_source_csv, mode='r') as file:
-            csv_reader = csv.reader(file, delimiter=',')
-            for restaurant_name, time in csv_reader:
-                restaurant_name = restaurant_name.strip()
-                restaurant_info[restaurant_name] = {}
-                for t in time.split('/'):
-                    opens, closes = self._parse_time(t)
-                    days = self._parse_days(t)
-                    r_d = {'opens': {}, 'closes': {}}
-                    for d in days:
-                        r_d['opens'][d] = opens
-                        r_d['closes'][d] = closes
-                    restaurant_info[restaurant_name].update(r_d)
-        return restaurant_info
-
-    # TODO what if restaurant opens at 11 am but close at 2 am next day
-    # Maybe solution? Example if we Monday 9:00:00 - 2:00:00 and Tuesday 8:00:00 - 23:00:00
-    # and now please tell me with restaurant works in tuesday at 01:23:00
-    # Look at tuesday. if tuesday opens is bigger then asked time then look at previous day and compare time
-    # if that time is bigger then asked time then voila :D yes
     def _parse_time(self, str_time):
         working_hours = []
         hours = re.search("\\d*:*\\d+ [ap]m - \\d*:*\\d+ [ap]m", str_time)
@@ -94,8 +71,24 @@ class DataLoader:
         days = range_of_days.split('-')
         start_day = enum_days.Days[days[0]].value
         end_day = enum_days.Days[days[1]].value
-        # TODO !!!SMELL!! What if the days will be Sun-Thu. start_day = 6 and end_day = 4. This will fail.
         return [i for i in range(start_day, end_day + 1)]
+
+    def _load_data_source2(self, data_source_csv: str) -> dict:
+        restaurant_info = {}
+        with open(data_source_csv, mode='r') as file:
+            csv_reader = csv.reader(file, delimiter=',')
+            for restaurant_name, time in csv_reader:
+                restaurant_name = restaurant_name.strip()
+                restaurant_info[restaurant_name] = {}
+                for t in time.split('/'):
+                    opens, closes = self._parse_time(t)
+                    days = self._parse_days(t)
+                    r_d = {'opens': {}, 'closes': {}}
+                    for d in days:
+                        r_d['opens'][d] = opens
+                        r_d['closes'][d] = closes
+                    restaurant_info[restaurant_name].update(r_d)
+        return restaurant_info
 
     def import_data(self, sources: list):
         _restaurant_info = {}

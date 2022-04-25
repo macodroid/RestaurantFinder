@@ -35,16 +35,25 @@ if __name__ == "__main__":
             print_restaurants_name(restaurants_open_now)
         elif user_input == 1:
             print("Please, specify time and day of the week.")
-            hours = datetime.datetime.strptime(input("Time (Hours:Minute) 24h-format: "), "%H:%M").time()
+            try:
+                hours = datetime.datetime.strptime(input("Time (Hours:Minute) 24h-format: "), "%H:%M").time()
+            except Exception:
+                print("Please, time in correct format. (format Hours:Minute)")
+                continue
             print("Mon = 0, Tue = 1, Wed = 2, Thu = 3, Fri = 4, Sat = 5, Sun = 6")
-            day = int(input("Day: "))
-            restaurants = rf.opened_restaurants(hours, day)
-            print(f"Restaurants open on {enum_days.Days(day).name} at {hours}")
+            try:
+                day = int(input("Day: "))
+                restaurants = rf.opened_restaurants(hours, day)
+                print(f"Restaurants open on {enum_days.Days(day).name} at {hours}")
+            except:
+                print("Please, enter correct number. Mon = 0, Tue = 1, Wed = 2, Thu = 3, Fri = 4, Sat = 5, Sun = 6")
+                continue
             print_restaurants_name(restaurants)
         elif user_input == 2:
             restaurant_name = input("Enter restaurant name: ")
             info = rf.get_information_about_specific_restaurant(restaurant_name)
-            print_all_information(restaurant_name, info)
+            if info is not None:
+                print_all_information(restaurant_name, info)
         elif user_input == 3:
             print_all_cuisine_types(types_of_cuisine)
             selected_cuisine = input("Enter type of cuisine: ")

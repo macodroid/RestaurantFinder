@@ -31,6 +31,24 @@ class TestRestaurantFinder(unittest.TestCase):
         open_restaurant = rf.opened_restaurants(datetime.time(1, 0), 1)
         self.assertEqual(list(restaurant.keys())[0], open_restaurant[0])
 
+    def test_restaurantFinder_closingHourIsMidnight_itItMonday_restaurantIsOpened(self):
+        restaurant = {
+            "Willy Wonka Factory": {
+                'opens': {0: datetime.time(17, 30), 1: datetime.time(17, 30), 2: datetime.time(17, 30)},
+                'closes': {0: datetime.time(0, 0), 1: datetime.time(23, 30), 2: datetime.time(23, 30)}}}
+        rf = restaurant_finder.RestaurantFinder(restaurant)
+        open_restaurant = rf.opened_restaurants(datetime.time(23, 30), 0)
+        self.assertEqual(list(restaurant.keys())[0], open_restaurant[0])
+
+    def test_restaurantFinder_closingHourIsInMidnight_itIsTuesday1h_restaurantIsClosed(self):
+        restaurant = {
+            "Willy Wonka Factory": {
+                'opens': {0: datetime.time(17, 30), 1: datetime.time(17, 30), 2: datetime.time(17, 30)},
+                'closes': {0: datetime.time(0, 0), 1: datetime.time(0, 0), 2: datetime.time(23, 30)}}}
+        rf = restaurant_finder.RestaurantFinder(restaurant)
+        open_restaurant = rf.opened_restaurants(datetime.time(1, 0), 1)
+        self.assertEqual([],open_restaurant,'Restaurant should be closed')
+
     def test_get_information_about_specific_restaurant(self):
         restaurant = {'BBQ Tofu Paradise': {'cuisine': 'vegetarian',
                                             'opens': {0: datetime.time(16, 30), 2: datetime.time(16, 30),
@@ -54,6 +72,7 @@ class TestRestaurantFinder(unittest.TestCase):
         rf = restaurant_finder.RestaurantFinder(restaurant)
         info_restaurant = rf.get_information_about_specific_restaurant("Sauron bar")
         self.assertIsNone(info_restaurant)
+
 
 if __name__ == '__main__':
     unittest.main()

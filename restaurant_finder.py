@@ -22,14 +22,16 @@ class RestaurantFinder:
             try:
                 opens = self._restaurants[restaurant]['opens'][day_of_the_week]
                 closes = self._restaurants[restaurant]['closes'][day_of_the_week]
+                if opens > closes == datetime.time(0, 0):
+                    closes = datetime.time(23, 59)
                 # first basic case that entered time is in interval of opens < time < closes
                 if opens < closes and opens <= time < closes:
                     open_restaurants.append(restaurant)
                 # second case when closing hours are on the border next day 00:00:00
-                elif opens > closes == datetime.time(0, 0):
-                    closes = datetime.time(23, 59)
-                    if closes > time:
-                        open_restaurants.append(restaurant)
+                # elif opens > closes == datetime.time(0, 0):
+                #     closes = datetime.time(23, 59)
+                #     if closes > time:
+                #         open_restaurants.append(restaurant)
                 # third case closing hours is till next day
                 elif opens > time < closes:
                     # restrict the day_of_the_week from jumping out of the interval  <0,6>

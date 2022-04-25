@@ -47,7 +47,7 @@ class TestRestaurantFinder(unittest.TestCase):
                 'closes': {0: datetime.time(0, 0), 1: datetime.time(0, 0), 2: datetime.time(23, 30)}}}
         rf = restaurant_finder.RestaurantFinder(restaurant)
         open_restaurant = rf.opened_restaurants(datetime.time(1, 0), 1)
-        self.assertEqual([],open_restaurant,'Restaurant should be closed')
+        self.assertEqual([], open_restaurant, 'Restaurant should be closed')
 
     def test_get_information_about_specific_restaurant(self):
         restaurant = {'BBQ Tofu Paradise': {'cuisine': 'vegetarian',
@@ -72,6 +72,24 @@ class TestRestaurantFinder(unittest.TestCase):
         rf = restaurant_finder.RestaurantFinder(restaurant)
         info_restaurant = rf.get_information_about_specific_restaurant("Sauron bar")
         self.assertIsNone(info_restaurant)
+
+    def test_get_restaurant_with_specific_cuisine(self):
+        cuisine = 'vegetarian'
+        restaurant = {'BBQ Tofu Paradise': {'cuisine': 'vegetarian'},
+                      'Earth Food': {'cuisine': 'vegetarian'},
+                      'BURGERS': {'cuisine': 'not vegetarian'}}
+        rf = restaurant_finder.RestaurantFinder(restaurant)
+        restaurant_with_specific_cuisine = rf.get_restaurants_info_with_specific_cuisine(cuisine)
+        self.assertEqual(2, len(restaurant_with_specific_cuisine))
+
+    def test_restaurants_with_specific_cuisine_doesnt_exist_empty_list(self):
+        cuisine = 'mediterian'
+        restaurant = {'BBQ Tofu Paradise': {'cuisine': 'vegetarian'},
+                      'Earth Food': {'cuisine': 'vegetarian'},
+                      'BURGERS': {'cuisine': 'not vegetarian'}}
+        rf = restaurant_finder.RestaurantFinder(restaurant)
+        restaurant_with_specific_cuisine = rf.get_restaurants_info_with_specific_cuisine(cuisine)
+        self.assertEqual(0, len(restaurant_with_specific_cuisine))
 
 
 if __name__ == '__main__':

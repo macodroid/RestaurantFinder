@@ -1,35 +1,7 @@
 import data_loader
-import enum_days
 import restaurant_finder
 import datetime
-
-
-def print_restaurants_name(restaurants):
-    for i, restaurant in enumerate(restaurants):
-        if i % 5 == 0 and i != 0:
-            print(restaurant)
-        elif i == len(restaurants) - 1:
-            print(restaurant)
-        else:
-            print(f"{restaurant}, ", end=" ")
-
-
-def print_work_hours(r_key, r_value):
-    print(r_key)
-    format = "%H:%M"
-    for day, hour in r_value.items():
-        print(f"{enum_days.Days(day).name}: {hour.strftime(format)}", end=' ')
-    print()
-
-
-def print_all_information(name, restaurant_info):
-    print(f"\n{name}")
-    for r_key, r_value in restaurant_info.items():
-        if r_key == 'opens' or r_key == 'closes':
-            print_work_hours(r_key, r_value)
-        else:
-            print(f"{r_key}: {r_value}")
-
+from utils import *
 
 if __name__ == "__main__":
     list_of_restaurants = ["data/restaurants-hours-source-1.csv", "data/restaurants-hours-source-2.csv"]
@@ -37,6 +9,7 @@ if __name__ == "__main__":
     restaurants = dl.import_data(list_of_restaurants)
     rf = restaurant_finder.RestaurantFinder(restaurants)
     restaurants_open_now = rf.opened_restaurants()
+    types_of_cuisine = get_all_cuisine_type(restaurants)
     active = True
 
     print("Welcome to the Restaurant Finder. Here You can find the working "
@@ -68,7 +41,10 @@ if __name__ == "__main__":
             info = rf.get_information_about_specific_restaurant(restaurant_name)
             print_all_information(restaurant_name, info)
         elif user_input == 3:
-            pass
+            print_all_cuisine_types(types_of_cuisine)
+            selected_cuisine = input("Enter type of cuisine: ")
+            restaurants = rf.get_restaurants_info_with_specific_cuisine(selected_cuisine)
+            print_restaurants_name(restaurants)
         elif user_input == 4:
             print("\nThank You for using our service.")
             print("Hopeful You found some restaurant that suite your schedule or cuisine. Bon appetite.")

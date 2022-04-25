@@ -94,6 +94,7 @@ class DataLoader:
         days = range_of_days.split('-')
         start_day = enum_days.Days[days[0]].value
         end_day = enum_days.Days[days[1]].value
+        # TODO !!!SMELL!! What if the days will be Sun-Thu. start_day = 6 and end_day = 4. This will fail.
         return [i for i in range(start_day, end_day + 1)]
 
     def import_data(self, sources: list):

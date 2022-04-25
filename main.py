@@ -1,5 +1,6 @@
 import data_loader
 from data_loader import *
+import datetime
 
 """
 TODO: ticket parking
@@ -25,20 +26,22 @@ def opened_restaurants(restaurants, time=None, day_of_the_week=None):
             opens = restaurants[restaurant]['opens'][day_of_the_week]
             closes = restaurants[restaurant]['closes'][day_of_the_week]
             # first basic case that entered time is in interval of opens < time < closes
-            # open < close && open <= time && time < close
             if opens < closes and opens <= time < closes:
                 print(restaurant)
-            # second case closing hours is till next day
+            # second case when closing hours are on the border next day 00:00:00
+            elif opens > closes == datetime.time(0, 0):
+                closes = datetime.time(23, 59)
+                if closes > time:
+                    return restaurant
+            # third case closing hours is till next day
             elif opens > closes:
-                # restrict the day_of_the_week from jumping out of the interval  <0,6>
-                day_of_the_week = (day_of_the_week - 1) % 7
-                previous_day_closes = restaurants[restaurant]['closes'][day_of_the_week]
-                previous_day_opens = restaurants[restaurant]['opens'][day_of_the_week]
-                if (previous_day_opens <= time <= datetime.strptime('23:59', "%H:%M").time()) or (
-                        datetime.strptime('00:00', "%H:%M").time() <= time < previous_day_closes):
+                # # restrict the day_of_the_week from jumping out of the interval  <0,6>
+                tmp_day_of_week = (day_of_the_week - 1) % 7
+                previous_day_opens = restaurants[restaurant]['opens'][tmp_day_of_week]
+                previous_day_closes = restaurants[restaurant]['closes'][tmp_day_of_week]
+                if (previous_day_opens <= time <= datetime.time(23, 59)) or (
+                        datetime.time(0, 0) <= time < previous_day_closes):
                     print(restaurant)
-
-                # third case when closing hours are on the border next day 00:00:00
         finally:
             continue
 
@@ -50,6 +53,6 @@ if __name__ == "__main__":
 
     print("Welcome to the Restaurant Finder. Here You can find the working "
           "hours of restaurant that You are interested in or some another information")
-    t = datetime.strptime('1:00', "%H:%M").time()
-    day_of_week = 1
+    t = datetime.time(1, 0)
+    day_of_week = 0
     opened_restaurants(restaurants, t, day_of_week)

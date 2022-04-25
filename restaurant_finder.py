@@ -32,12 +32,19 @@ class RestaurantFinder:
                         open_restaurants.append(restaurant)
                 # third case closing hours is till next day
                 elif opens > time < closes:
-                    # # restrict the day_of_the_week from jumping out of the interval  <0,6>
-                    tmp_day_of_week = (day_of_the_week - 1) % 7
-                    previous_day_opens = self._restaurants[restaurant]['opens'][tmp_day_of_week]
-                    previous_day_closes = self._restaurants[restaurant]['closes'][tmp_day_of_week]
+                    # restrict the day_of_the_week from jumping out of the interval  <0,6>
+                    previous_day_of_week = (day_of_the_week - 1) % 7
+                    previous_day_closes = self._restaurants[restaurant]['closes'][previous_day_of_week]
                     if datetime.time(0, 0) <= time < previous_day_closes:
                         open_restaurants.append(restaurant)
-            except KeyError:
+            except:
                 continue
         return open_restaurants
+
+    def get_information_about_specific_restaurant(self, restaurant_name):
+        try:
+            return self._restaurants[restaurant_name]
+        except KeyError:
+            print(
+                f'Restaurant with name: {restaurant_name} is not in database. Please, enter correct name of restaurant.')
+            return None

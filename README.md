@@ -23,7 +23,11 @@ The application was developed and tested with python 3.10. Therefore, no extra p
 application.
 If you don't have installed python 3.10, you don't need to install it. You can just build a docker image and run it.
 
-##### Build docker image
+##### Docker
 1. Go to the project's root directory, where the docker file location is.
 2. build docker image ``docker build -t <image-tag> .``
 3. run application ``docker run -t <image-tag>``
+
+##### Terminal
+1. Go to the project's root directory, where the file **main.py** is located.
+2. ``python3 ./main.py``

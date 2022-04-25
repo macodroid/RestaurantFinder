@@ -13,22 +13,27 @@ if __name__ == "__main__":
     active = True
 
     print("Welcome to the Restaurant Finder. Here You can find the working "
-          "hours of restaurant that You are interested in or some another information")
+          "hours of the restaurant that You are interested in or some other information")
     print("Restaurants open now!")
     print_restaurants_name(restaurants_open_now)
     while active:
-        print("\nPress 1 to find all opened restaurants with specific time and day")
-        print("Press 2 to find all information about specific restaurant")
-        print("Press 3 to find restaurant with specific cuisine")
+        print("\nPressing enter, the restaurants that are open now will be displayed.")
+        print("Press 1 to find all opened restaurants with specific times and day.")
+        print("Press 2 to find all information about a specific restaurant.")
+        print("Press 3 to find a restaurant with specific cuisine.")
         print("Press 4 to quit")
-        try:
-            user_input = int(input("Type a number: "))
-            if user_input < 1 or user_input > 4:
-                raise ValueError
-        except ValueError:
-            print("Please, input valid number. Valid values are 1 2 3 4")
-
-        if user_input == 1:
+        user_input = input("Type a number: ")
+        if user_input != '':
+            try:
+                user_input = int(user_input)
+                if user_input < 1 or user_input > 4:
+                    raise ValueError
+            except ValueError:
+                print("Please, input valid number. Valid values are 1 2 3 4")
+        if user_input == '':
+            print("\nRestaurants open now!")
+            print_restaurants_name(restaurants_open_now)
+        elif user_input == 1:
             print("Please, specify time and day of the week.")
             hours = datetime.datetime.strptime(input("Time (Hours:Minute) 24h-format: "), "%H:%M").time()
             print("Mon = 0, Tue = 1, Wed = 2, Thu = 3, Fri = 4, Sat = 5, Sun = 6")

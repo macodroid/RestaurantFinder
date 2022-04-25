@@ -43,7 +43,7 @@ class RestaurantFinder:
             return self._restaurants[restaurant_name]
         except KeyError:
             print(
-                f'Restaurant with name: {restaurant_name} is not in database. Please, enter correct name of restaurant.')
+                f"Restaurant with name '{restaurant_name}' is not in database. Please, enter correct name of restaurant.")
             return None
 
     def get_restaurants_info_with_specific_cuisine(self, cuisine):

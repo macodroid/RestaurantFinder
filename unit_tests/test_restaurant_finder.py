@@ -91,6 +91,25 @@ class TestRestaurantFinder(unittest.TestCase):
         restaurant_with_specific_cuisine = rf.get_restaurants_info_with_specific_cuisine(cuisine)
         self.assertEqual(0, len(restaurant_with_specific_cuisine))
 
+    def test_restaurants_open_now(self):
+        restaurant = {
+            "Willy Wonka Factory": {
+                'opens': {datetime.datetime.today().weekday(): datetime.time(8, 30)},
+                'closes': {datetime.datetime.today().weekday(): datetime.time(23, 0)}
+            },
+            "Willy Wonka Factory2": {
+                'opens': {datetime.datetime.today().weekday(): datetime.time(8, 30)},
+                'closes': {datetime.datetime.today().weekday(): datetime.time(23, 0)}
+            },
+            "Willy Wonka Factory3": {
+                'opens': {8: datetime.time(17, 30)},
+                'closes': {8: datetime.time(0, 0)}
+            }
+        }
+        rf = restaurant_finder.RestaurantFinder(restaurant)
+        open_restaurant = rf.opened_restaurants()
+        self.assertEqual(2, len(open_restaurant))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -91,6 +91,11 @@ class DataLoader:
         return restaurant_info
 
     def import_data(self, sources: list):
+        """
+        Imports data.\n
+        :param sources: list of all sources
+        :return dict:
+        """
         _restaurant_info = {}
         _restaurant_info.update(self._load_data_source1(sources[0]))
         _restaurant_info.update(self._load_data_source2(sources[1]))

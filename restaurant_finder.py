@@ -39,6 +39,11 @@ class RestaurantFinder:
         return open_restaurants
 
     def get_information_about_specific_restaurant(self, restaurant_name):
+        """
+        Method will return all information for specified restaurant name.\n
+        :param restaurant_name: restaurants name
+        :return dict restaurant info:
+        """
         try:
             return self._restaurants[restaurant_name]
         except KeyError:
@@ -47,6 +52,11 @@ class RestaurantFinder:
             return None
 
     def get_restaurants_info_with_specific_cuisine(self, cuisine):
+        """
+        Return list of all restaurants that has specified cuisine.\n
+        :param cuisine: type of cuisine
+        :return list of :
+        """
         restaurants_with_specific_cuisine = []
         for restaurant in self._restaurants:
             try:
